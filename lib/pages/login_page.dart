@@ -6,6 +6,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _userPasswordController = TextEditingController();
+
+  final String _userName = "User123";
+  final String _password = "1234";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,18 +25,19 @@ class _LoginPageState extends State<LoginPage> {
                 _headingWidget(),
                 _spacingWidget(vertical: 40),
                 Form(
+                    key: _formKey,
                     child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Column(
-                    children: [
-                      _userNameWidget(),
-                      _spacingWidget(vertical: 20),
-                      _userPasswordWidget(),
-                      _spacingWidget(vertical: 20),
-                      _loginWidget()
-                    ],
-                  ),
-                ))
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Column(
+                        children: [
+                          _userNameWidget(),
+                          _spacingWidget(vertical: 20),
+                          _userPasswordWidget(),
+                          _spacingWidget(vertical: 20),
+                          _loginWidget()
+                        ],
+                      ),
+                    ))
               ],
             ),
           ),
@@ -47,12 +55,16 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField _userNameWidget() {
     return TextFormField(
+      controller: _userNameController,
+      validator: (String userName) => _validateUserName(userName),
       decoration: InputDecoration(hintText: 'Enter Username'),
     );
   }
 
   TextFormField _userPasswordWidget() {
     return TextFormField(
+      controller: _userPasswordController,
+      validator: (String userPassword) => _validateUserPassword(userPassword),
       obscureText: true,
       decoration: InputDecoration(hintText: 'Enter Password'),
     );
@@ -62,10 +74,37 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(onPressed: () => _login(), child: Text('Login'));
   }
 
-
   _spacingWidget({double horizontal, double vertical}) {
     return SizedBox(width: horizontal, height: vertical);
   }
 
-  _login() {}
+  void _login() {
+    if(_isValidInput()) {
+      print('valid input');
+      if(_isValidUser(_userNameController.text, _userPasswordController.text)) {
+        print('valid user');
+      } else {
+        print('invalid user');
+      }
+    }
+    else {
+      print('invalid input');
+    }
+  }
+
+  String _validateUserPassword(String userPassword) {
+    return userPassword.isEmpty ? 'Enter Password' : null;
+  }
+
+  String _validateUserName(String userName) {
+    return userName.isEmpty ? 'Enter Password' : null;
+  }
+
+  bool _isValidInput() {
+    return _formKey.currentState.validate();
+  }
+
+  bool _isValidUser(String userName, String password) {
+    return (_userName == userName && _password == password);
+  }
 }
