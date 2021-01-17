@@ -14,6 +14,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final String _userName = "User123";
   final String _password = "1234";
+
+  final _focus  = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +61,8 @@ class _LoginPageState extends State<LoginPage> {
     return TextFormField(
       controller: _userNameController,
       validator: (String userName) => _validateUserName(userName),
+      textInputAction: TextInputAction.next,
+      onEditingComplete: () => FocusScope.of(context).nextFocus(),
       decoration: InputDecoration(hintText: 'Enter Username'),
     );
   }
@@ -68,6 +72,8 @@ class _LoginPageState extends State<LoginPage> {
       controller: _userPasswordController,
       validator: (String userPassword) => _validateUserPassword(userPassword),
       obscureText: true,
+      textInputAction: TextInputAction.done,
+      onEditingComplete: () => FocusScope.of(context).unfocus(),
       decoration: InputDecoration(hintText: 'Enter Password'),
     );
   }
@@ -81,16 +87,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() {
-    if(_isValidInput()) {
+    if (_isValidInput()) {
       print('valid input');
-      if(_isValidUser(_userNameController.text, _userPasswordController.text)) {
+      if (_isValidUser(
+          _userNameController.text, _userPasswordController.text)) {
         print('valid user');
       } else {
         print('invalid user');
         _showSnackBar('invalid user');
       }
-    }
-    else {
+    } else {
       print('invalid input');
     }
   }
