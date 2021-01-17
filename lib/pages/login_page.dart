@@ -7,6 +7,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _userPasswordController = TextEditingController();
@@ -16,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         child: Center(
           child: SingleChildScrollView(
@@ -85,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         print('valid user');
       } else {
         print('invalid user');
+        _showSnackBar('invalid user');
       }
     }
     else {
@@ -106,5 +109,9 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isValidUser(String userName, String password) {
     return (_userName == userName && _password == password);
+  }
+
+  void _showSnackBar(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
   }
 }
