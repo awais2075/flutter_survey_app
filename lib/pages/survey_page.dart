@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_survey_app/drawers/main_drawer.dart';
 import 'package:flutter_survey_app/helpers/database_helper.dart';
 import 'package:flutter_survey_app/models/survey.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,12 +28,27 @@ class _SurveyPageState extends State<SurveyPage> {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
   File _imageFile;
   final _imagePicker = ImagePicker();
-  double _latitude;
-  double _longitude;
+  double _latitude = 0.0;
+  double _longitude = 0.0;
 
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed.
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    _addressController.dispose();
+    _remarksController.dispose();
+    _locationController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('New Survey'),
+      ),
+      drawer: MainDrawer(),
       key: _scaffoldKey,
       body: Center(
         child: SingleChildScrollView(
@@ -160,8 +176,6 @@ class _SurveyPageState extends State<SurveyPage> {
             width: 100,
             height: 100,
           );
-    return Image(
-        width: 150, height: 100, image: AssetImage('images/background.jpg'));
   }
 
   ElevatedButton _saveWidget() {
@@ -186,14 +200,14 @@ class _SurveyPageState extends State<SurveyPage> {
   }
 
   String _validatePhoneNumber(String phoneNumber) {
-    return phoneNumber.isEmpty ? 'Invalid Phone Number' : null;
-
-    String validArgument;
+    /*String validArgument;
     PhoneNumberUtil.isValidPhoneNumber(phoneNumber: phoneNumber, isoCode: 'US')
         .then((isValid) => {
-              if (!isValid) {validArgument = 'Invalid PhoneNumber'}
-            });
-    return validArgument;
+          print('valid : $isValid')
+        });
+    return validArgument;*/
+
+    return phoneNumber.isEmpty ? 'Invalid Phone Number' : null;
   }
 
   String _validateAddress(String address) {
@@ -238,7 +252,7 @@ class _SurveyPageState extends State<SurveyPage> {
           email: _emailController.text,
           phoneNumber: _phoneNumberController.text,
           address: _addressController.text,
-          location: _imageFile.path,
+          location: (_imageFile== null)?"":_imageFile?.path,
           remarks: _remarksController.text,
           latitude: _latitude.toString(),
           longitude: _longitude.toString());
@@ -277,16 +291,4 @@ class _SurveyPageState extends State<SurveyPage> {
             value != -1 ? _showSnackBar("Survey Added Successfully") : null)
         .catchError((error) => _showSnackBar(error.message));
   }
-
- /* void _getAllSurveys() async {
-    List<Survey> surveys = [];
-    _databaseHelper.getAllRows().then((rows) => {
-          for (var index = 0; index < rows.length; index++)
-            {
-              surveys.add(Survey.fromMap(rows[index])),
-              print(surveys[index].phoneNumber)
-
-            }
-        });
-  }*/
 }
