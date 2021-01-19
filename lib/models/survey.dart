@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 class Survey {
+  int id;
   String name;
   String email;
   String phoneNumber;
@@ -10,10 +11,16 @@ class Survey {
   String latitude;
   String longitude;
 
-  Survey({this.name, this.email, this.phoneNumber, this.address,
-      this.location, this.remarks, this.latitude, this.longitude});
-
-
+  Survey(
+      {this.id,
+      this.name,
+      this.email,
+      this.phoneNumber,
+      this.address,
+      this.location,
+      this.remarks,
+      this.latitude,
+      this.longitude});
 
   Map<String, dynamic> toMap() {
     return {
@@ -29,13 +36,13 @@ class Survey {
   }
 
   factory Survey.fromMap(Map<String, dynamic> value) => Survey(
-    name:value['name'],
-    email:value['email'],
-    phoneNumber:value['phone_number'],
-    address:value['address'],
-    location:value['location'],
-    remarks:value['remarks'],
-    latitude:value['latitude'],
-    longitude:value['longitude']
-  );
+      id: value['survey_id'],
+      name: value['name'],
+      email: value['email'],
+      phoneNumber: value['phone_number'],
+      address: value['address'],
+      location: value['location'],
+      remarks: value['remarks'],
+      latitude: value['latitude'],
+      longitude: value['longitude']);
 }
