@@ -31,7 +31,7 @@ class DatabaseHelper {
     Directory directory = await getApplicationDocumentsDirectory();
     String dbPath = join(directory.path, _dbName);
 
-    return await openDatabase(dbPath,version: _dbVersion, onCreate: _onCreate);
+    return await openDatabase(dbPath, version: _dbVersion, onCreate: _onCreate);
   }
 
   FutureOr<void> _onCreate(Database db, int version) {
@@ -56,10 +56,13 @@ class DatabaseHelper {
     return database.insert(_dbTableName, value);
   }
 
-  Future<List<Map<String,dynamic>>> getAllRows() async {
+  Future<List<Map<String, dynamic>>> getAllRows() async {
     Database database = await instance.database;
     return await database.query(_dbTableName);
   }
 
-
+  Future<int> deleteById(int id) async {
+    Database database = await instance.database;
+    return await database.delete(_dbTableName, where: 'survey_id = $id');
+  }
 }

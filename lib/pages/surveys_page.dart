@@ -15,6 +15,7 @@ class _SurveysPageState extends State<SurveysPage> {
 
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
+  int _currentIndex = -1;
   @override
   void initState() {
     _getAllSurveys();
@@ -33,11 +34,13 @@ class _SurveysPageState extends State<SurveysPage> {
           : ListView.builder(
               itemCount: _surveys.length,
               itemBuilder: (BuildContext context, int index) {
+                _currentIndex = index;
                 return ListTile(
                   leading: (_surveys[index].location.isEmpty)? Icon(Icons.photo):Image.file(File(_surveys[index].location)),
                   title: Text(_surveys[index].name),
                   subtitle: Text(_surveys[index].email),
                   trailing: _deleteSurveyWidget(_surveys[index], index),
+                  onTap: _showSurveyDetail,
                 );
               }),
     );
@@ -81,5 +84,36 @@ class _SurveysPageState extends State<SurveysPage> {
         _surveys.removeAt(index);
       });
     }
+  }
+
+  Future<void> _showSurveyDetail() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:  (_surveys[_currentIndex].location.isEmpty)? Icon(Icons.photo):Image.file(File(_surveys[_currentIndex].location)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Name : ${_surveys[_currentIndex].name}'),
+                Text('Email : ${_surveys[_currentIndex].email}'),
+                Text('Address : ${_surveys[_currentIndex].address}'),
+                Text('Address : ${_surveys[_currentIndex].remarks}'),
+                Text('Address : ${_surveys[_currentIndex].longitude} - ${_surveys[_currentIndex].longitude}'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

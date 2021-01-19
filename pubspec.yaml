@@ -57,6 +57,9 @@ dependencies:
   # https://pub.dev/packages/libphonenumber
   libphonenumber: ^1.0.2
 
+  # A composable, Future-based library for making HTTP requests.
+  # https://pub.dev/packages/http
+  http: ^0.12.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

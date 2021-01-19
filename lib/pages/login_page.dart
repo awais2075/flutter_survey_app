@@ -50,6 +50,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed.
+    _userNameController.dispose();
+    _userPasswordController.dispose();
+    super.dispose();
+  }
+
+
   Text _headingWidget() {
     return Text(
       'User Login',
@@ -92,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
       if (_isValidUser(
           _userNameController.text, _userPasswordController.text)) {
         print('valid user');
+        Navigator.pushReplacementNamed(context, '/surveys_page');
       } else {
         print('invalid user');
         _showSnackBar('invalid user');
