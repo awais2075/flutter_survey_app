@@ -8,6 +8,7 @@ import 'package:flutter_survey_app/models/survey.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:libphonenumber/libphonenumber.dart';
+import 'package:http/http.dart' as http;
 
 class SurveyPage extends StatefulWidget {
   @override
@@ -42,6 +43,7 @@ class _SurveyPageState extends State<SurveyPage> {
     _locationController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -252,7 +254,7 @@ class _SurveyPageState extends State<SurveyPage> {
           email: _emailController.text,
           phoneNumber: _phoneNumberController.text,
           address: _addressController.text,
-          location: (_imageFile== null)?"":_imageFile?.path,
+          location: (_imageFile == null) ? "" : _imageFile?.path,
           remarks: _remarksController.text,
           latitude: _latitude.toString(),
           longitude: _longitude.toString());
@@ -290,5 +292,17 @@ class _SurveyPageState extends State<SurveyPage> {
         .then((value) =>
             value != -1 ? _showSnackBar("Survey Added Successfully") : null)
         .catchError((error) => _showSnackBar(error.message));
+  }
+
+  Future<dynamic> _insertDataViaHttp(
+      String url, Map<String, dynamic> data) async {
+    return http
+        .post(url,
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: data)
+        .then((value) => {})
+        .catchError((onError) => {});
   }
 }
